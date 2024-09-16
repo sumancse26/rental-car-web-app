@@ -18,6 +18,9 @@ return new class extends Migration
             $table->date('start_date');
             $table->date('end_date');
             $table->decimal('total_cost');
+
+            $table->foreign('user_id')->references('id')->on('users')->cascadeOnUpdate()->restrictOnDelete();
+            $table->foreign('car_id')->references('id')->on('cars')->cascadeOnUpdate()->restrictOnDelete();
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });
