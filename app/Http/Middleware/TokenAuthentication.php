@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Helpers\JWTToken;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,6 +16,17 @@ class TokenAuthentication
      */
     public function handle(Request $request, Closure $next): Response
     {
-        return $next($request);
+        try {
+            $token = $request->cookie('token');
+            $result = JWTToken::decodeToken($token);
+            if ($result == 'unauthorized') {
+                return response()->json(['success' => false, 'message' => 'Unauthorized'], 401);
+            }
+            $request->headers->set('id', $result->userId);
+            $request->headers->set('email', $result->email);
+            return $next($request);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+        }
     }
 }

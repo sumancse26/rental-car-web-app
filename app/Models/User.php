@@ -9,6 +9,13 @@ class User extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'name',
+        'email',
+        'password',
+        'role',
+    ];
+
     public function isAdmin()
     {
         return $this->role === 'admin';
