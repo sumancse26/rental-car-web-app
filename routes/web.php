@@ -18,4 +18,7 @@ Route::get('get-car', [CarController::class, 'getCar'])->middleware(TokenAuthent
 Route::delete('delete-car/{id}', [CarController::class, 'deleteCar'])->middleware(TokenAuthentication::class);
 
 //Rentals routes
-Route::post('create-rental', [RentalController::class, 'createOrUpdateRental'])->middleware(TokenAuthentication::class);
+Route::post('create-update-rental', [RentalController::class, 'createOrUpdateRental'])->middleware(TokenAuthentication::class);
+Route::get('get-rental', [RentalController::class, 'getRental'])->middleware(TokenAuthentication::class);
+Route::get('cancel-rental', [RentalController::class, 'cancelRental'])->middleware(TokenAuthentication::class);
+Route::delete('delete-rental', [RentalController::class, 'deleteRental'])->middleware(TokenAuthentication::class);

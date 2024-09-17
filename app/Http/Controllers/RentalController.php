@@ -16,7 +16,6 @@ class RentalController extends Controller
         DB::beginTransaction();
 
         try {
-            // Fetch user from header
             $userId = $request->header('id');
             $user = User::find($userId);
 
@@ -61,6 +60,82 @@ class RentalController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function getRental(Request $request)
+    {
+        try {
+            $userId = $request->header('id');
+            $user = User::find($userId);
+            if (!$user) {
+                return response()->json(['message' => 'Unauthorized'], 404);
+            }
+
+            $booking = Rental::where('user_id', $userId)
+                ->with('car')
+                ->get();
+
+            return response()->json([
+                'success' => true,
+                'data' => $booking
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 500);
+        }
+    }
+
+    public function deleteRental(Request $request)
+    {
+        try {
+            $userId = $request->header('id');
+            $user = User::find($userId);
+            if (!$user && $user->role != 'admin') {
+                return response()->json(['message' => 'Unauthorized'], 404);
+            }
+
+            $rental = Rental::where('id', $request->id)->first();
+            if (!$rental) {
+                return response()->json(['message' => 'Rental not found'], 404);
+            }
+            $car = Car::where('id', $rental->car_id)->first();
+            if (!$car) {
+                return response()->json(['message' => 'Car not found'], 404);
+            }
+            $car->availability = 1;
+            $car->save();
+            $rental->delete();
+            return response()->json(['success' => true, 'message' => 'Rental deleted successfully'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 500);
+        }
+    }
+
+
+    public function cancelRental(Request $request)
+    {
+        try {
+            $userId = $request->header('id');
+            $user = User::find($userId);
+            if (!$user) {
+                return response()->json(['message' => 'Unauthorized'], 404);
+            }
+
+            $rental = Rental::where('id', $request->id)->first();
+            if (!$rental) {
+                return response()->json(['message' => 'Rental not found'], 404);
+            }
+            $car = Car::where('id', $rental->car_id)->first();
+            if (!$car) {
+                return response()->json(['message' => 'Car not found'], 404);
+            }
+            $car->availability = 1;
+            $car->save();
+            $rental->status = 'cancelled';
+            $rental->save();
+            return response()->json(['success' => true, 'message' => 'Rental canceled'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 500);
         }
     }
 }
