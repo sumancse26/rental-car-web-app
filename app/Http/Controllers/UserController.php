@@ -11,6 +11,10 @@ use Illuminate\Support\Facades\Log;
 class UserController extends Controller
 {
 
+    public function loginPage()
+    {
+        return view('pages.auth.login');
+    }
     public function addUserPage()
     {
         return view('pages.auth.register');
@@ -19,6 +23,8 @@ class UserController extends Controller
     {
         return view('pages.dashboard.user-list');
     }
+
+
     public function createUser(Request $request)
     {
         try {
@@ -40,11 +46,14 @@ class UserController extends Controller
     {
         try {
 
+
             $user = User::where('email', $request->input('email'))->first();
             if ($user && Hash::check($request->input('password'), $user->password)) {
                 $token = JWTToken::generateToken($user->email, $user->id);
 
-                return response()->json(['success' => true, 'message' => 'User logged in successfully.'], 200)->cookie('token', $token, 60 * 24 * 30, '/');
+                // response()->json(['success' => true, 'message' => 'User logged in successfully.'], 200)->cookie('token', $token, 60 * 24 * 30, '/');
+                return redirect('/')->withCookie('token', $token, 60 * 24 * 30, '/');
+                // return response()->json(['success' => true, 'message' => 'User logged in successfully.'], 200)->cookie('token', $token, 60 * 24 * 30, '/');
             } else {
                 return response()->json(['success' => false, 'message' => 'Unauthorized'], 401);
             }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Car;
+use App\Models\Rental;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
@@ -11,14 +12,45 @@ class CarController extends Controller
 {
 
     //methods for page routes
-    public function carList()
+
+    public function carList(Request $request)
     {
         return view('pages.dashboard.car-list');
     }
-    public function addCarToList()
+    public function addCarToList(Request $request)
     {
         return view('pages.dashboard.add-car');
     }
+
+    public function dashboardList(Request $request)
+    {
+        try {
+            $userId = $request->header('id');
+            $user = User::where('id', $userId)->first();
+
+            if ($user == null || $user->role != 'admin') {
+                return response()->json(['success' => false, 'message' => 'Unauthorized'], 401);
+            }
+
+            $cars = Car::all();
+            $rentals = Rental::all();
+
+            $totalCars = $cars->count();
+            $availableCars = $cars->where('availability', '1')->count();
+
+            $totalRentals = $rentals->count();
+            $totalEarnings = $rentals->sum('total_cost');
+
+
+            return view('pages.dashboard.dashboard', ['totalCars' => $totalCars, 'availableCars' => $availableCars, 'totalRentals' => $totalRentals, 'totalEarnings' => $totalEarnings]);
+        } catch (\Exception $ex) {
+            return response()->json([
+                'success' => false,
+                'message' => $ex->getMessage()
+            ]);
+        }
+    }
+
     public function addCar(Request $request)
     {
         try {
