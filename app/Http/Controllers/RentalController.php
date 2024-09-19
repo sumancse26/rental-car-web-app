@@ -11,6 +11,14 @@ use Illuminate\Support\Facades\DB;
 
 class RentalController extends Controller
 {
+    public function rentalPage()
+    {
+        return view('pages.dashboard.rental-list');
+    }
+    public function addRentalPage()
+    {
+        return view('pages.dashboard.add-rental');
+    }
     public function createOrUpdateRental(Request $request)
     {
         DB::beginTransaction();

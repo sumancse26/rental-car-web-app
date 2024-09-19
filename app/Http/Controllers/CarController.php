@@ -9,6 +9,16 @@ use Illuminate\Support\Facades\File;
 
 class CarController extends Controller
 {
+
+    //methods for page routes
+    public function carList()
+    {
+        return view('pages.dashboard.car-list');
+    }
+    public function addCarToList()
+    {
+        return view('pages.dashboard.add-car');
+    }
     public function addCar(Request $request)
     {
         try {
