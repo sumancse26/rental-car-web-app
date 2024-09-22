@@ -12,11 +12,6 @@ class CarController extends Controller
 {
 
     //methods for page routes
-
-    public function carList(Request $request)
-    {
-        return view('pages.dashboard.car-list');
-    }
     public function addCarToList(Request $request)
     {
         return view('pages.dashboard.add-car');
@@ -56,17 +51,21 @@ class CarController extends Controller
         try {
             $userId = $request->header('id');
 
-
             $user = User::where('id', $userId)->first();
             if ($user == null || $user->role != 'admin') {
                 return response()->json(['success' => false, 'message' => 'Unauthorized'], 401);
             }
 
+            if (!$request->hasFile('image')) {
+                return response()->json(['success' => false, 'message' => 'Image file is required.'], 400);
+            }
 
             $img = $request->file('image');
+
             $imgName = $img->getClientOriginalName();
             $time = time();
             $uploadedImg = $userId . $time . $imgName;
+
             $img->move(public_path('uploads'), $uploadedImg);
 
             $img_url = "uploads/{$uploadedImg}";
@@ -78,26 +77,27 @@ class CarController extends Controller
                 'year' => $request->input('year'),
                 'car_type' => $request->input('car_type'),
                 'daily_rent_price' => $request->input('daily_rent_price'),
-                'availability' => $request->input('availability'),
+                'availability' => $request->input('availability') ?? 0,
                 'image' => $img_url
-
             ]);
-            return response()->json(['success' => true, 'message' => 'Car added successfully.'], 200);
+
+            return redirect('get-car');
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
+
     public function editCar(Request $request)
     {
         try {
+
             $userId = $request->header('id');
             $user = User::where('id', $userId)->first();
             if ($user == null || $user->role != 'admin') {
                 return response()->json(['success' => false, 'message' => 'Unauthorized'], 401);
             }
-
-            $car = Car::where('id', $request->input('id'))->first();
+            $car = Car::where('id', $request->id)->first();
             if ($car == null) {
                 return response()->json(['success' => false, 'message' => 'Car not found'], 404);
             }
@@ -112,7 +112,7 @@ class CarController extends Controller
                 $img_url = "uploads/{$uploadedImg}";
 
                 $filePath = $car->image;
-                File::delete($filePath);
+                File::delete(public_path($filePath));
 
                 $car->name = $request->input('name');
                 $car->brand = $request->input('brand');
@@ -120,7 +120,7 @@ class CarController extends Controller
                 $car->year = $request->input('year');
                 $car->car_type = $request->input('car_type');
                 $car->daily_rent_price = $request->input('daily_rent_price');
-                $car->availability = $request->input('availability');
+                $car->availability = $request->input('availability') ?? 0;
                 $car->image = $img_url;
             } else {
                 $car->name = $request->input('name');
@@ -129,12 +129,12 @@ class CarController extends Controller
                 $car->year = $request->input('year');
                 $car->car_type = $request->input('car_type');
                 $car->daily_rent_price = $request->input('daily_rent_price');
-                $car->availability = $request->input('availability');
+                $car->availability = $request->input('availability') ?? 0;
             }
 
             $car->save();
 
-            return response()->json(['success' => true, 'message' => 'Car updated successfully'], 200);
+            return redirect('get-car');
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
@@ -151,7 +151,27 @@ class CarController extends Controller
             }
 
             $car = Car::all();
-            return response()->json(['success' => true, 'car' => $car], 200);
+            return view('pages.dashboard.car-list', ['cars' => $car]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+    public function getCarById(Request $request)
+    {
+        try {
+            $userId = $request->header('id');
+
+            $user = User::where('id', $userId)->first();
+            if ($user == null) {
+                return response()->json(['success' => false, 'message' => 'Unauthorized'], 401);
+            }
+
+            $car = Car::find($request->id);
+
+            if ($car == null) {
+                return response()->json(['success' => false, 'message' => 'Car not found'], 404);
+            }
+            return view('pages.dashboard.edit-car', ['car' => $car]);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
@@ -172,9 +192,9 @@ class CarController extends Controller
             }
 
             $filePath = $car->image;
-            File::delete($filePath);
+            File::delete(public_path($filePath));
             $car->delete();
-            return response()->json(['success' => true, 'message' => 'Car deleted successfully'], 200);
+            return redirect('get-car');
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }

@@ -50,10 +50,7 @@ class UserController extends Controller
             $user = User::where('email', $request->input('email'))->first();
             if ($user && Hash::check($request->input('password'), $user->password)) {
                 $token = JWTToken::generateToken($user->email, $user->id);
-
-                // response()->json(['success' => true, 'message' => 'User logged in successfully.'], 200)->cookie('token', $token, 60 * 24 * 30, '/');
                 return redirect('/')->withCookie('token', $token, 60 * 24 * 30, '/');
-                // return response()->json(['success' => true, 'message' => 'User logged in successfully.'], 200)->cookie('token', $token, 60 * 24 * 30, '/');
             } else {
                 return response()->json(['success' => false, 'message' => 'Unauthorized'], 401);
             }
@@ -65,7 +62,7 @@ class UserController extends Controller
     public function logout(Request $request)
     {
         try {
-            return response()->json(['success' => true, 'message' => 'User logged out successfully.'], 200)->cookie('token', null, -1, '/');
+            return redirect('/')->withCookie('token', null, -1, '/');
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => 'Internal serve error'], 500);
         }

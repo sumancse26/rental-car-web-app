@@ -1,13 +1,14 @@
 <div class="max-w-md mx-auto   flex items-center  justify-center">
 
-    <form class="p-5 border-2 border-gray-300 rounded-lg shadow-lg" method="POST" action="{{ route('add.car') }}"
-        enctype="multipart/form-data">
+    <form class="p-5 border-2 border-gray-300 rounded-lg shadow-lg" method="POST"
+        action="{{ route('edit.car', $car->id) }}" enctype="multipart/form-data">
 
         @csrf
-        <h4 class="font-bold text-center pb-2">Add Car</h4>
+        <h4 class="font-bold text-center pb-2">Edit Car</h4>
+
         <div class=mt-3>
             <div class="relative z-0 w-full mb-5 group">
-                <input type="text" name="name" id="floating_email"
+                <input type="text" name="name" id="floating_email" value="{{ $car->name }}"
                     class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                     placeholder=" " required />
                 <label for="floating_email"
@@ -17,7 +18,7 @@
                     Name</label>
             </div>
             <div class="relative z-0 w-full mb-5 group">
-                <input type="text" name="brand" id="floating_email"
+                <input type="text" name="brand" id="floating_email" value="{{ $car->brand }}"
                     class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600
                      dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                     placeholder="" required />
@@ -29,7 +30,7 @@
                     Brand</label>
             </div>
             <div class="relative z-0 w-full mb-5 group">
-                <input type="text" name="model" id="floating_email"
+                <input type="text" name="model" id="floating_email" value="{{ $car->model }}"
                     class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                     placeholder="" required />
                 <label for="floating_email"
@@ -39,7 +40,7 @@
                      peer-focus:-translate-y-6">Model</label>
             </div>
             <div class="relative z-0 w-full mb-5 group">
-                <input type="number" name="year" id="floating_password"
+                <input type="number" name="year" id="floating_password" value="{{ $car->year }}"
                     class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none
                      dark:text-white dark:border-gray-600
                      dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
@@ -51,7 +52,7 @@
                       peer-focus:-translate-y-6">Year</label>
             </div>
             <div class="relative z-0 w-full mb-5 group">
-                <input type="text" name="car_type" id="floating_repeat_password"
+                <input type="text" name="car_type" id="floating_repeat_password" value="{{ $car->car_type }}"
                     class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                     placeholder=" " required />
                 <label for="floating_repeat_password"
@@ -64,6 +65,7 @@
             <div class="grid md:grid-cols-2 md:gap-6">
                 <div class="relative z-0 w-full mb-5 group">
                     <input type="number" name="daily_rent_price" id="floating_first_name"
+                        value="{{ $car->daily_rent_price }}"
                         class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                         placeholder=" " required />
                     <label for="floating_first_name"
@@ -76,7 +78,8 @@
 
 
                 <div class="flex items-center gap-1">
-                    <input checked id="checked-checkbox" name="availability" type="checkbox" value="1"
+                    <input @checked($car->availability) id="checked-checkbox" name="availability" type="checkbox"
+                        value="{{ $car->availability }}"
                         class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                     <label for="checked-checkbox"
                         class="ms-2 text-sm font-medium text-gray-500 dark:text-gray-300">availabile</label>
@@ -89,12 +92,12 @@
                     Image</label>
                 <input
                     class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
-                    id="file_input" name="image" type="file">
+                    id="file_input" name="image" type="file" value="{{ $car->image }}" accept="image/*">
             </div>
         </div>
 
         <div class="flex justify-center gap-2">
-            <a href="{{ route('home') }}"
+            <a href="{{ route('car.list') }}"
                 class="mt-5 text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Cancel</a>
 
             <button type="submit"
