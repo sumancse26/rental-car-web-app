@@ -11,38 +11,56 @@ use Illuminate\Support\Facades\DB;
 
 class RentalController extends Controller
 {
-    public function rentalPage()
+    // public function rentalPage()
+    // {
+    //     return view('pages.dashboard.rental-list');
+    // }
+    public function addRentalPage(Request $request)
     {
-        return view('pages.dashboard.rental-list');
+        $userId = $request->header('id');
+
+        $user = User::where('id', $userId)->first();
+        if ($user == null) {
+            return response()->json(['success' => false, 'message' => 'Unauthorized'], 401);
+        }
+
+        $car = Car::where('availability', 1)->get();
+        return view('pages.dashboard.add-rental', ['cars' => $car]);
     }
-    public function addRentalPage()
-    {
-        return view('pages.dashboard.add-rental');
-    }
-    public function createOrUpdateRental(Request $request)
+    public function createOrUpdateRental(Request $request, $id = null)
     {
         DB::beginTransaction();
 
         try {
+            $data = json_decode($request->selected_car);
+
+            $car_id = $data->id;
+
             $userId = $request->header('id');
             $user = User::find($userId);
+
+            $carId = $request->input('car_id') ?? $car_id;
 
             if (!$user) {
                 return response()->json(['success' => false, 'message' => 'Unauthorized'], 401);
             }
 
-            $car = Car::where('id', $request->input('car_id'))->first();
+            $car = Car::where('id', $carId)->first();
+
             if (!$car) {
                 return response()->json(['success' => false, 'message' => 'Car not found'], 404);
             }
-            $rental = Rental::where('car_id', $request->input('car_id'))->first();
+            $rental = Rental::where('car_id', $carId)->first();
 
             if ($rental && $userId != $rental->user_id && $car->availability === 0) {
                 return response()->json(['success' => false, 'message' => 'Car is not available'], 400);
             }
 
+
+
             $car->availability = 0;
             $car->save();
+
 
             $startDate = Carbon::parse($request->input('start_date'));
             $endDate = Carbon::parse($request->input('end_date'));
@@ -51,10 +69,11 @@ class RentalController extends Controller
 
             $data = Rental::updateOrCreate(
                 [
-                    'user_id' => $userId,
-                    'car_id' => $request->input('car_id'),
+                    'id' => $id,
                 ],
                 [
+                    'user_id' => $userId,
+                    'car_id' => $carId,
                     'start_date' => $startDate,
                     'end_date' => $endDate,
                     'status' => $request->input('status', 'ongoing'),
@@ -64,7 +83,7 @@ class RentalController extends Controller
 
             DB::commit();
 
-            return response()->json(['success' => true, 'message' => 'Rental created/updated successfully', 'rental' => $data], 200);
+            return redirect(route('rental.list'));
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json(['error' => $e->getMessage()], 500);
@@ -81,13 +100,32 @@ class RentalController extends Controller
             }
 
             $booking = Rental::where('user_id', $userId)
-                ->with('car')
+                ->with('car', 'user')
                 ->get();
 
-            return response()->json([
-                'success' => true,
-                'data' => $booking
-            ]);
+            return view('pages.dashboard.rental-list', ['bookings' => $booking]);
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 500);
+        }
+    }
+
+
+    public function getRentalById(Request $request)
+    {
+        try {
+            $userId = $request->header('id');
+            $user = User::find($userId);
+            if (!$user) {
+                return response()->json(['message' => 'Unauthorized'], 404);
+            }
+
+            $rental = Rental::where('id', $request->id)->with('car')->first();
+            if (!$rental) {
+                return response()->json(['message' => 'Rental not found'], 404);
+            }
+
+            $car = Car::where('availability', 1)->get();
+            return view('pages.dashboard.edit-rental', ['rental' => $rental, 'cars' => $car]);
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);
         }
@@ -141,7 +179,35 @@ class RentalController extends Controller
             $car->save();
             $rental->status = 'cancelled';
             $rental->save();
-            return response()->json(['success' => true, 'message' => 'Rental canceled'], 200);
+            return redirect(route('rental.list'));
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 500);
+        }
+    }
+
+    public function completeRental(Request $request)
+    {
+        try {
+            $userId = $request->header('id');
+            $user = User::find($userId);
+            if (!$user) {
+                return response()->json(['message' => 'Unauthorized'], 404);
+            }
+            $rental = Rental::where('id', $request->id)->first();
+            if (!$rental) {
+                return response()->json(['message' => 'Rental not found'], 404);
+            }
+
+            $car = Car::where('id', $rental->car_id)->first();
+            if (!$car) {
+                return response()->json(['message' => 'Car not found'], 404);
+            }
+            $car->availability = 1;
+            $car->save();
+
+            $rental->status = 'completed';
+            $rental->save();
+            return redirect(route('rental.list'));
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);
         }

@@ -14,6 +14,7 @@ class CarController extends Controller
     //methods for page routes
     public function addCarToList(Request $request)
     {
+
         return view('pages.dashboard.add-car');
     }
 
@@ -34,10 +35,13 @@ class CarController extends Controller
             $availableCars = $cars->where('availability', '1')->count();
 
             $totalRentals = $rentals->count();
-            $totalEarnings = $rentals->sum('total_cost');
+            $totalOngoingRentals = Rental::where('status', 'ongoing')->count();
+            $totalCanceledRentals = Rental::where('status', 'cancelled')->count();
+            $totalCompletedRentals = Rental::where('status', 'completed')->count();
+            $totalEarnings = Rental::where('status', 'completed')->sum('total_cost');
 
 
-            return view('pages.dashboard.dashboard', ['totalCars' => $totalCars, 'availableCars' => $availableCars, 'totalRentals' => $totalRentals, 'totalEarnings' => $totalEarnings]);
+            return view('pages.dashboard.dashboard', ['totalCars' => $totalCars, 'availableCars' => $availableCars, 'totalRentals' => $totalRentals, 'totalOngoingRentals' => $totalOngoingRentals, 'totalCanceledRentals' => $totalCanceledRentals, 'totalCompletedRentals' => $totalCompletedRentals, 'totalEarnings' => $totalEarnings]);
         } catch (\Exception $ex) {
             return response()->json([
                 'success' => false,
@@ -150,7 +154,7 @@ class CarController extends Controller
                 return response()->json(['success' => false, 'message' => 'Unauthorized'], 401);
             }
 
-            $car = Car::all();
+            $car = Car::where('availability', 1)->get();
             return view('pages.dashboard.car-list', ['cars' => $car]);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);

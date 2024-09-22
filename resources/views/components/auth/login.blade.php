@@ -1,6 +1,6 @@
 <div class="w-full h-screen flex justify-center items-center">
     <form action="{{ route('user.login') }}" method="POST"
-        class="w-1/3 h-2/4 mx-auto border-2 border-gray-500 p-5 rounded-md">
+        class="w-1/3 h-2/4 mx-auto border-2 border-gray-500 p-5 rounded-md" enctype="multipart/form-data">
         @csrf
         <h6 class="flex justify-center mb-4 text-lg font-semibold">User Login</h6>
         <div>

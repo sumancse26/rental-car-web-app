@@ -18,6 +18,7 @@ class TokenAuthentication
     {
         try {
             $token = $request->cookie('token');
+
             $result = JWTToken::decodeToken($token);
             if ($result == 'unauthorized') {
                 return response()->json(['success' => false, 'message' => 'Unauthorized'], 401);

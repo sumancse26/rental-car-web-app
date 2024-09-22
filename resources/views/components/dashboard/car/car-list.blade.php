@@ -117,14 +117,16 @@
                             @endif
                         </td>
                         <td class="px-6 py-4 text-right flex gap-2">
-                            <a href="{{ route('car.edit.page', $car->id) }}"
-                                class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                            <form action="{{ route('car.delete', $car->id) }}" method="POST"
-                                enctype="multipart/form-data">
-                                @method('DELETE')
-                                @csrf
-                                <button
-                                    class="font-medium text-red-600 dark:text-red-500 hover:underline">Delete</button>
+                            @if ($car->availability == 1)
+                                <a href="{{ route('car.edit.page', $car->id) }}"
+                                    class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
+                                <form action="{{ route('car.delete', $car->id) }}" method="POST"
+                                    enctype="multipart/form-data">
+                                    @method('DELETE')
+                                    @csrf
+                                    <button
+                                        class="font-medium text-red-600 dark:text-red-500 hover:underline">Delete</button>
+                            @endif
                             </form>
                         </td>
                     </tr>
