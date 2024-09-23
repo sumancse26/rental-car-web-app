@@ -19,9 +19,22 @@ class UserController extends Controller
     {
         return view('pages.auth.register');
     }
+    public function editUserPage(Request $request, $id)
+    {
+
+        $selectedUserInfo = User::where('id', $id)->first();
+        return view('pages.dashboard.user-edit', ['user' => $selectedUserInfo]);
+    }
     public function listUserPage()
     {
-        return view('pages.dashboard.user-list');
+        try {
+
+            $users = User::all();
+
+            return view('pages.dashboard.user-list', ['users' => $users]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 
 
@@ -49,7 +62,6 @@ class UserController extends Controller
             $user = User::where('email', $request->input('email'))->first();
             if ($user && Hash::check($request->input('password'), $user->password)) {
                 $token = JWTToken::generateToken($user->email, $user->id);
-                //return response()->json(['success' => true, 'token' => $token], 200)->cookie('token', $token, 60 * 24 * 30, '/');
                 return redirect('/')->withCookie(cookie('token', $token, 60 * 24 * 30, '/',));
             } else {
                 return response()->json(['success' => false, 'error' => 'Invalid',  'message' => 'Unauthorized'], 401);
@@ -68,7 +80,7 @@ class UserController extends Controller
         }
     }
 
-    public function editUser(Request $request)
+    public function editUser(Request $request, $id)
     {
         try {
             $userId = $request->header('id');
@@ -78,16 +90,17 @@ class UserController extends Controller
                 return response()->json(['error' => 'Unauthorized'], 404);
             }
 
-            $user = User::where('id', $request->input('id'))->first();
+            $user = User::where('id', $id)->first();
+
+            $role = $request->input('role') == '1' ? 'admin' :  'customer';
 
             $user->update([
                 'name' => $request->input('name'),
-                'password' => Hash::make($request->input('password')),
-                'role' => $request->input('role') ?? 'customer',
+                'role' => $role,
                 'phone' => $request->input('phone'),
                 'address' => $request->input('address'),
             ]);
-            return response()->json(['success' => 'User updated successfully.'], 200);
+            return redirect(route('user.list'));
         } catch (\Exception $e) {
             Log::error($e->getMessage());
             return response()->json(['error' => $e->getMessage()], 500);

@@ -9,18 +9,19 @@ use Illuminate\Support\Facades\Route;
 
 
 //page routes
-Route::get('/', [CarController::class, 'dashboardList'])->name('home')->middleware(TokenAuthentication::class);
+Route::get('/', [CarController::class, 'dashboardList'])->middleware(TokenAuthentication::class)->name('home');
 Route::get('add-car', [CarController::class, 'addCarToList'])->name('car.add');
-Route::get('add-rental', [RentalController::class, 'addRentalPage'])->name('rental.addPage')->middleware(TokenAuthentication::class);
+Route::get('add-rental', [RentalController::class, 'addRentalPage'])->middleware(TokenAuthentication::class)->name('rental.addPage');
 Route::get('add-user', [UserController::class, 'addUserPage'])->name('user.add');
-Route::get('list-user', [UserController::class, 'listUserPage'])->name('user.list');
+Route::get('edit-user-page/{id}', [UserController::class, 'editUserPage'])->name('user.editPage');
+Route::get('list-user', [UserController::class, 'listUserPage'])->middleware(TokenAuthentication::class)->name('user.list');
 Route::get('login-page', [UserController::class, 'loginPage'])->name('auth.login');
 
 //user routes
 Route::post('user-registration', [UserController::class, 'createUser']);
 Route::post('login', [UserController::class, 'login'])->name('user.login');
 Route::get('logout', [UserController::class, 'logout'])->name('user.logout');
-Route::post('edit-user', [UserController::class, 'editUser'])->middleware(TokenAuthentication::class);
+Route::post('edit-user/{id}', [UserController::class, 'editUser'])->middleware(TokenAuthentication::class)->name('user.update');
 
 
 
