@@ -11,10 +11,10 @@ use Illuminate\Support\Facades\DB;
 
 class RentalController extends Controller
 {
-    // public function rentalPage()
-    // {
-    //     return view('pages.dashboard.rental-list');
-    // }
+    public function rentalPage()
+    {
+        return redirect(route('frontend.car'));
+    }
     public function addRentalPage(Request $request)
     {
         $userId = $request->header('id');
@@ -126,6 +126,17 @@ class RentalController extends Controller
 
             $car = Car::where('availability', 1)->get();
             return view('pages.dashboard.edit-rental', ['rental' => $rental, 'cars' => $car]);
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 500);
+        }
+    }
+
+    public function getRentalByCar(Request $request)
+    {
+        try {
+            $rental = Rental::where('car_id', $request->id)->first();
+            $car = Car::where('availability', 1)->get();
+            return view('pages.frontend.edit-rental', ['rental' => $rental, 'cars' => $car]);
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);
         }

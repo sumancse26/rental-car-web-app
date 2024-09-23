@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\JWTToken;
+use App\Models\Car;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -11,6 +12,11 @@ use Illuminate\Support\Facades\Log;
 class UserController extends Controller
 {
 
+    public function homePage(Request $request)
+    {
+        $car = Car::where('availability', 1)->get();
+        return view('pages.frontend.home-page', ['cars' => $car]);
+    }
     public function loginPage()
     {
         return view('pages.auth.login');
@@ -25,6 +31,8 @@ class UserController extends Controller
         $selectedUserInfo = User::where('id', $id)->first();
         return view('pages.dashboard.user-edit', ['user' => $selectedUserInfo]);
     }
+
+
     public function listUserPage()
     {
         try {

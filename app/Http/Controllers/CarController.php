@@ -18,6 +18,26 @@ class CarController extends Controller
         return view('pages.dashboard.add-car');
     }
 
+    public function carPage(Request $request)
+    {
+        $cars = Car::where('availability', 1)->get();
+        return view('pages.frontend.car-page', ['cars' => $cars]);
+    }
+
+    public function searchCar(Request $request)
+    {
+        $search = $request->input('search');
+
+        $cars = Car::when($search, function ($query, $search) {
+            return $query->where('name', 'like', "%{$search}%")
+                ->orWhere('brand', 'like', "%{$search}%")
+                ->orWhere('model', 'like', "%{$search}%")
+                ->orWhere('car_type', 'like', "%{$search}%");
+        })->get();
+
+        return view('pages.frontend.car-page', ['cars' => $cars]);
+    }
+
     public function dashboardList(Request $request)
     {
         try {
@@ -147,19 +167,14 @@ class CarController extends Controller
     public function getCar(Request $request)
     {
         try {
-            $userId = $request->header('id');
-
-            $user = User::where('id', $userId)->first();
-            if ($user == null) {
-                return response()->json(['success' => false, 'message' => 'Unauthorized'], 401);
-            }
-
             $car = Car::where('availability', 1)->get();
             return view('pages.dashboard.car-list', ['cars' => $car]);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+
+
     public function getCarById(Request $request)
     {
         try {

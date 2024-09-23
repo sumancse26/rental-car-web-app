@@ -54,8 +54,6 @@
                 <label for="helper-checkbox" class="font-medium text-gray-900 dark:text-gray-300">Role</label>
             </div>
         </div>
-
-
     </div>
     <div class="flex justify-center gap-2">
         <a href="{{ route('user.list') }}"
