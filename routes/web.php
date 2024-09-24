@@ -25,7 +25,7 @@ Route::get('rental', [RentalController::class, 'rentalPage'])->name('frontend.re
 Route::get('booking', [RentalController::class, 'bookingPage'])->middleware(TokenAuthentication::class)->name('frontend.bookings');
 
 //user routes
-Route::post('user-registration', [UserController::class, 'createUser']);
+Route::post('user-registration', [UserController::class, 'createUser'])->name('user.register');
 Route::post('login', [UserController::class, 'login'])->name('user.login');
 Route::get('logout', [UserController::class, 'logout'])->name('user.logout');
 Route::post('edit-user/{id}', [UserController::class, 'editUser'])->middleware(TokenAuthentication::class)->name('user.update');
@@ -41,9 +41,14 @@ Route::get('get-car/{id}', [CarController::class, 'getCarById'])->middleware(Tok
 
 //Rentals routes
 Route::post('create-update-rental/{id?}', [RentalController::class, 'createOrUpdateRental'])->middleware(TokenAuthentication::class)->name('rental.add');
+Route::post('create-update-rental-from-frontend/{id?}', [RentalController::class, 'createOrUpdateRentalFromFrontend'])->middleware(TokenAuthentication::class)->name('rental.addFromFrontend');
 Route::get('get-rental', [RentalController::class, 'getRental'])->middleware(TokenAuthentication::class)->name('rental.list');
 Route::get('cancel-rental/{id}', [RentalController::class, 'cancelRental'])->middleware(TokenAuthentication::class)->name('rental.cancel');
 Route::get('complete-rental/{id}', [RentalController::class, 'completeRental'])->middleware(TokenAuthentication::class)->name('rental.complete');
+
+Route::get('cancel-rental-from-frontend/{id}', [RentalController::class, 'cancelRentalFromFrontend'])->middleware(TokenAuthentication::class)->name('rental.cancelFromFrontend');
+Route::get('complete-rental-from-frontend/{id}', [RentalController::class, 'completeRentalFromFrontend'])->middleware(TokenAuthentication::class)->name('rental.completeFromFrontend');
+
 Route::delete('delete-rental', [RentalController::class, 'deleteRental'])->middleware(TokenAuthentication::class);
 Route::get('get-rental-by-id/{id}', [RentalController::class, 'getRentalById'])->middleware(TokenAuthentication::class)->name('rental.edit');
 Route::get('get-rental-by-car/{id}', [RentalController::class, 'getRentalByCar'])->middleware(TokenAuthentication::class)->name('rental.bycar');

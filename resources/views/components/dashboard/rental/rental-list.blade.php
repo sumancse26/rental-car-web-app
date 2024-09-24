@@ -135,8 +135,9 @@
 
                         <td class="text-center gap-2 flex pt-6">
                             @if ($booking->status == 'ongoing')
-                                <a href="{{ route('rental.edit', $booking->id) }}"
+                                <a href="{{ route('rental.edit', $booking->car_id) }}"
                                     class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
+
                                 <form action="{{ route('rental.cancel', $booking->id) }}" method="POST"
                                     enctype="multipart/form-data">
                                     @method('GET')

@@ -7,14 +7,19 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Car Rental Navbar</title>
         @vite('resources/css/app.css')
+
     </head>
 
     <body class="bg-gray-100">
-        @include('components.frontend.navbar')
+        <div>
+            @include('components.frontend.navbar')
+        </div>
         @yield('content')
-
-        @include('pages.frontend.footer')
+        <div>
+            @include('pages.frontend.footer')
+        </div>
     </body>
-    <script src="http://unpkg.com/turbolinks"></script>
+
+
 
 </html>

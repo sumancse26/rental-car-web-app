@@ -15,9 +15,10 @@
         <link href="https://afeld.github.io/emoji-css/emoji.css" rel="stylesheet">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.min.js"
             integrity="sha256-xKeoJ50pzbUGkpQxDYHD7o7hxe0LaOGeguUidbq6vis=" crossorigin="anonymous"></script>
-        <script src="http://unpkg.com/turbolinks"></script>
+
 
         @vite('resources/css/app.css')
+        <script src="http://unpkg.com/turbolinks"></script>
 
     </head>
 

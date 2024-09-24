@@ -24,28 +24,17 @@ class CarController extends Controller
         return view('pages.frontend.car-page', ['cars' => $cars]);
     }
 
-    public function searchCar(Request $request)
-    {
-        $search = $request->input('search');
-
-        $cars = Car::when($search, function ($query, $search) {
-            return $query->where('name', 'like', "%{$search}%")
-                ->orWhere('brand', 'like', "%{$search}%")
-                ->orWhere('model', 'like', "%{$search}%")
-                ->orWhere('car_type', 'like', "%{$search}%");
-        })->get();
-
-        return view('pages.frontend.car-page', ['cars' => $cars]);
-    }
-
     public function dashboardList(Request $request)
     {
         try {
             $userId = $request->header('id');
             $user = User::where('id', $userId)->first();
 
-            if ($user == null || $user->role != 'admin') {
-                return response()->json(['success' => false, 'message' => 'Unauthorized'], 401);
+            if ($user == null) {
+                return redirect(route('auth.login'));
+            }
+            if ($user->role != 'admin') {
+                return redirect(route('home'));
             }
 
             $cars = Car::all();
@@ -173,7 +162,6 @@ class CarController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
-
 
     public function getCarById(Request $request)
     {

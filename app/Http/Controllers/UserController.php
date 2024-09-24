@@ -14,6 +14,7 @@ class UserController extends Controller
 
     public function homePage(Request $request)
     {
+        $userId = $request->header('id');
         $car = Car::where('availability', 1)->get();
         return view('pages.frontend.home-page', ['cars' => $car]);
     }
@@ -55,7 +56,7 @@ class UserController extends Controller
                 'password' => Hash::make($request->input('password')),
                 'role' => $request->input('role') ?? 'customer',
             ]);
-            return response()->json(['success' => 'User created successfully.'], 200);
+            return redirect(route('auth.login'));
         } catch (\Exception $e) {
             Log::error($e->getMessage());
             return response()->json(['error' => $e->getMessage()], 500);
@@ -70,7 +71,7 @@ class UserController extends Controller
             $user = User::where('email', $request->input('email'))->first();
             if ($user && Hash::check($request->input('password'), $user->password)) {
                 $token = JWTToken::generateToken($user->email, $user->id);
-                return redirect('/')->withCookie(cookie('token', $token, 60 * 24 * 30, '/',));
+                return redirect(route('home'))->withCookie(cookie('token', $token, 60 * 24 * 30, '/',));
             } else {
                 return response()->json(['success' => false, 'error' => 'Invalid',  'message' => 'Unauthorized'], 401);
             }
@@ -82,7 +83,7 @@ class UserController extends Controller
     public function logout(Request $request)
     {
         try {
-            return redirect('/')->withCookie('token', null, -1, '/');
+            return redirect(route('home'))->withCookie('token', null, -1, '/');
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => 'Internal serve error'], 500);
         }

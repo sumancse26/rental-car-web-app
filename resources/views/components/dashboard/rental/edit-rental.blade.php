@@ -12,7 +12,7 @@
                     onchange="getSelectedCar(this)">
                     <option value="" disabled selected>Select a car</option>
                     @foreach ($cars as $car)
-                        <option value="{{ $car }}" @selected($car)>{{ $car->name }}</option>
+                        <option value="{{ $car }}" @selected($car->id == $rental->car_id)>{{ $car->name }}</option>
                     @endforeach
                 </select>
             </div>

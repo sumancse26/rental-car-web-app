@@ -3,14 +3,12 @@
     <h1 class="text-3xl font-bold text-center">Welcome to Our Car Rental Service</h1>
     <p class="text-center mt-2">Find the perfect car for your next adventure!</p>
 
-    <!-- Search Form -->
     <div class="mt-8 flex justify-center">
         <input type="text" id="search-input" placeholder="Search by car type, brand..."
             class="border border-gray-300 rounded-lg p-2">
         <button class="bg-blue-500 text-white rounded-lg px-4 ml-2" onclick="searchCar()">Search</button>
     </div>
 
-    <!-- Display Cars -->
     <div class="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         @foreach ($cars as $car)
             <div class="border rounded-lg overflow-hidden shadow-lg car">

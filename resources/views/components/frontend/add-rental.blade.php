@@ -1,6 +1,6 @@
-<div class="w-screen  mx-auto   flex items-center  justify-center">
+<div class="w-screen  mx-auto flex items-center justify-center mt-10 pt-10">
 
-    <form class=" w-2/3 p-5 border-2 border-gray-300 rounded-lg shadow-lg" action="{{ route('rental.add') }}"
+    <form class=" w-2/3 p-5 border-2 border-gray-300 rounded-lg shadow-lg" action="{{ route('rental.addFromFrontend') }}"
         method="POST" enctype="multipart/form-data">
         @csrf
         <h4 class="font-bold text-center pb-2">Rent a Car</h4>
@@ -13,7 +13,7 @@
                     onchange="getSelectedCar(this)">
                     <option value="" selected disabled>Select a Car</option>
                     @foreach ($cars as $car)
-                        <option value="{{ $car }}">{{ $car->name }}</option>
+                        <option value="{{ $car }}" @selected($car->id == $selectedCar->id)>{{ $car->name }}</option>
                     @endforeach
                 </select>
             </div>
@@ -35,11 +35,11 @@
             <div class="w-1/2 md:w-1/3 xl:w-1/4">
 
                 <label class="block text-gray-600">Car Model:</label>
-                <p name="car_model" id="car_model" class="text-lg font-bold"></p>
+                <p name="car_model" id="car_model" class="text-lg font-bold">{{ $selectedCar->model }}</p>
             </div>
             <div class="w-1/2 md:w-1/3 xl:w-1/4">
                 <label class="block text-gray-600">Rent:</label>
-                <p name="rent" id="rent" class="text-lg font-bold"> </p>
+                <p name="rent" id="rent" class="text-lg font-bold"> {{ $selectedCar->daily_rent_price }}</p>
             </div>
             <div class="w-1/2 md:w-1/3 xl:w-1/4">
 
@@ -51,7 +51,7 @@
 
 
         <div class="flex justify-center gap-2">
-            <a href="{{ route('rental.list') }}"
+            <a href="{{ route('home') }}"
                 class="mt-5 text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Cancel</a>
 
             <button type="submit"

@@ -14,21 +14,20 @@
             </li>
         </ul>
 
-        <!-- User Section -->
+
         <div class="hidden md:flex items-center space-x-4">
-            <a href="#" class="text-white bg-yellow-500 px-4 py-2 rounded hover:bg-yellow-600 transition">Login /
-                Sign Up</a>
-            <!-- Uncomment for profile dropdown when logged in -->
-            <!--
-            <div class="relative group">
-                <img src="profile.jpg" alt="Profile" class="w-8 h-8 rounded-full cursor-pointer">
-                <div class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-2 hidden group-hover:block">
-                    <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Profile</a>
-                    <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Bookings</a>
-                    <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Logout</a>
-                </div>
-            </div>
-            -->
+            <a href="{{ route('auth.login') }}"
+                class="text-white bg-yellow-500 px-4 py-2 rounded hover:bg-yellow-600 transition">Login
+            </a>
+            <a href="{{ route('user.add') }}"
+                class="text-white bg-yellow-500 px-4 py-2 rounded hover:bg-yellow-600 transition">Sign
+                Up</a>
+
+            <a href="{{ route('user.logout') }}"
+                class="text-white bg-yellow-500 px-4 py-2 rounded hover:bg-yellow-600 transition">Logout</a>
+            <a href="{{ route('dashboard') }}"
+                class="text-white bg-yellow-500 px-4 py-2 rounded hover:bg-yellow-600 transition">Dashboard</a>
+
         </div>
     </div>
 </nav>

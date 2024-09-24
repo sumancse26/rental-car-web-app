@@ -1,6 +1,6 @@
 <div class="w-screen mx-auto flex items-center justify-center my-32">
     <form class=" w-2/3 p-5 border-2 border-gray-300 rounded-lg shadow-lg" method="POST"
-        action="{{ route('rental.add', ['id' => $rental->id]) }}" enctype="multipart/form-data">
+        action="{{ route('rental.addFromFrontend', ['id' => $rental->id]) }}" enctype="multipart/form-data">
         @csrf
         <h4 class="font-bold text-center pb-2">Book</h4>
         <div class="flex items-center justify-around gap-3">
