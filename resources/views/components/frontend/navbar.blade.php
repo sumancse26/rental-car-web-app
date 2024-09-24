@@ -1,11 +1,11 @@
 <nav class="bg-sky-800 p-4 fixed w-full z-10 top-0">
     <div class="container mx-auto flex items-center justify-between">
         <!-- Logo -->
-        <a href="#" class="text-white text-2xl font-bold">CarRental</a>
+        <a href="{{ route('home') }}" class="text-white text-2xl font-bold">CarRental</a>
 
         <!-- Navigation Links -->
         <ul class="hidden md:flex space-x-6">
-            <li><a href="/" class="text-white hover:text-yellow-600 transition">Home</a></li>
+            <li><a href="{{ route('home') }}" class="text-white hover:text-yellow-600 transition">Home</a></li>
             <li><a href="{{ route('frontend.car') }}" class="text-white hover:text-yellow-600 transition">Cars</a></li>
             <li><a href="{{ route('frontend.rentals') }}" class="text-white hover:text-yellow-600 transition">Rentals</a>
             </li>

@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\EmailToAdmin;
+use App\Mail\EmailToCustomer;
 use App\Models\Car;
 use App\Models\Rental;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class RentalController extends Controller
 {
@@ -24,9 +27,7 @@ class RentalController extends Controller
             return response()->json(['message' => 'Unauthorized'], 404);
         }
 
-        $booking = Rental::where('user_id', $userId)
-            ->with('car', 'user')
-            ->get();
+        $booking = Rental::with('car', 'user')->get();
 
         return view('pages.frontend.booking-page', ['bookings' => $booking]);
     }
@@ -160,6 +161,13 @@ class RentalController extends Controller
                     'total_cost' => $totalCost,
                 ]
             );
+
+            $admin = User::where('role', 'admin')->get();
+            foreach ($admin as $adminUser) {
+                Mail::to($adminUser->email)->send(new EmailToAdmin($user, $car, $data));
+            }
+
+            Mail::to($user->email)->send(new EmailToCustomer($user, $car, $data));
 
             DB::commit();
 
