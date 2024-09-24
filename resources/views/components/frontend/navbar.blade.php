@@ -1,9 +1,7 @@
 <nav class="bg-sky-800 p-4 fixed w-full z-10 top-0">
     <div class="container mx-auto flex items-center justify-between">
-        <!-- Logo -->
         <a href="{{ route('home') }}" class="text-white text-2xl font-bold">CarRental</a>
 
-        <!-- Navigation Links -->
         <ul class="hidden md:flex space-x-6">
             <li><a href="{{ route('home') }}" class="text-white hover:text-yellow-600 transition">Home</a></li>
             <li><a href="{{ route('frontend.car') }}" class="text-white hover:text-yellow-600 transition">Cars</a></li>
@@ -13,7 +11,6 @@
                     class="text-white hover:text-yellow-600 transition">Bookings</a>
             </li>
         </ul>
-
 
         <div class="hidden md:flex items-center space-x-4">
             <a href="{{ route('auth.login') }}"
