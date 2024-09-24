@@ -72,7 +72,7 @@ Please follow the instruction to run the project.
 
    ```
     MAIL_MAILER=smtp
-    MAIL_HOST=sandbox.smtp.mailtrap.io
+    MAIL_HOST=sandbox.smtp.mailtrap.iol
     MAIL_PORT=2525
     MAIL_USERNAME=e7e869d864f322
     MAIL_PASSWORD=10d99d1bc4002d

@@ -21,7 +21,7 @@ class TokenAuthentication
 
             $result = JWTToken::decodeToken($token);
             if ($result == 'unauthorized') {
-                return redirect(route('home'));
+                return redirect(route('auth.login'));
             }
             $request->headers->set('id', $result->userId);
             $request->headers->set('email', $result->email);
