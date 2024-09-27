@@ -46,7 +46,7 @@ Please follow the instruction to run the project.
 4. Enter your Token encryption Key in `.env` file
 
    ```
-   JWT_KEY = 'aswerDFWKIF0472~[]\Trwbc.';
+   JWT_KEY = 'aswerDFWKIF0472~[]\Trwbc.'
    ```
 
 5. Login Credential both for admin and user
@@ -68,16 +68,9 @@ Please follow the instruction to run the project.
 
    ```
 
-7. Configure Mail
+7. Project presentation video link
 
    ```
-    MAIL_MAILER=smtp
-    MAIL_HOST=sandbox.smtp.mailtrap.iol
-    MAIL_PORT=2525
-    MAIL_USERNAME=e7e869d864f322
-    MAIL_PASSWORD=10d99d1bc4002d
-    MAIL_ENCRYPTION=tls
-    MAIL_FROM_ADDRESS="<no-replay@suman.com>"
-    MAIL_FROM_NAME="Car Rental Web"
+   Link = '<https://www.loom.com/share/a9849bce099b40c2856592443bbd4979?sid=5623bae1-3536-42ed-b91e-75ee6013a1c7>'
 
    ```
